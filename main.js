@@ -14,7 +14,7 @@ bot.on('ready', function(){
         },
         status: 'online'
     });
-    console.log('BOT ACTIVE!');
+    console.log('BOT ACTIVE!!!');
 });
 
 bot.login(TOKEN)
