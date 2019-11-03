@@ -1,12 +1,13 @@
 'use strict'
 
-const findPermLevel = require('./tools/permfinder.js');
+const findPermLevel= require('./tools/permfinder.js');
 
 const commandMap = {
    "test": require('./commands/test.js'),
    "toggleOnGod": require('./commands/toggleOnGod.js'),
    "setPrefix": require('./commands/setPrefix.js'),
    "clearChannel": require('./commands/bulkDelete.js'),
+   "disableCommands": require('./commands/disableCommands.js'),
 }
 
 /*
@@ -23,6 +24,11 @@ class commandHandler {
    }
 
    handle(message, cmdstr) {
+
+      if (!this.settingsref.get().doCommands) {
+         message.channel.send("Commands are currently disabled by administrators.");
+         return;
+      }
       
       let commandStream = cmdstr.split(" ");
 
@@ -37,9 +43,18 @@ class commandHandler {
             return;
          }
 
+         const commandQueue = [];
+
          commandStream.forEach(val => {
 
+            if (commandQueue.includes(val)) return;
+
+            commandQueue.push(val);
+
             if (val == 'help') {
+               message.channel.send(">>> __help__\n\n**Usuage**: !help <command...>\n\n" + 
+               "**Description**: Gets documentation about a command.\n\n" + 
+               "**Permissions**: No Permissions Required.");
                return;
             }
 
@@ -61,10 +76,10 @@ class commandHandler {
          return;
       }
 
-     const permValue = findPermLevel(message, this.settingsref.get());
+     const permValue = findPermLevel.fromMessage(message, this.settingsref.get());
 
       try {
-         if (permValue < commandMap[command].permissions) {
+         if (permValue < commandMap[command].permissions && permValue != -1) {
             message.reply("You do not have permisson to run that command.");
             return;
          }

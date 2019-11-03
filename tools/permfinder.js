@@ -1,8 +1,8 @@
-function findPermLevel(message, settings) {
+function fromMessage(message, settings) {
 
    const usrid = message.author.id;
    
-   if (settings.admins.includes(usrid)) return 999;
+   if (settings.admins.includes(usrid)) return -1;
 
    const permLevels = settings.permlevels;
    
@@ -18,4 +18,8 @@ function findPermLevel(message, settings) {
    return permLevel;
 }
 
-module.exports = findPermLevel;
+function fromId(usrId, settings) {
+
+}
+
+module.exports = { fromMessage, fromId };
