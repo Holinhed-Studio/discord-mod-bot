@@ -20,6 +20,9 @@ function fromMessage(message, settings) {
 
 function fromId(usrId, settings) {
 
+   if (settings.admins.includes(usrId)) return -1;
+
+   return 0;
 }
 
 module.exports = { fromMessage, fromId };

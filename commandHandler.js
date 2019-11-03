@@ -23,9 +23,9 @@ class commandHandler {
       this.settingsref = settingsref;
    }
 
-   handle(message, cmdstr) {
+   handle(message, cmdstr, sudo) {
 
-      if (!this.settingsref.get().doCommands) {
+      if (!this.settingsref.get().doCommands && !sudo) {
          message.channel.send("Commands are currently disabled by administrators.");
          return;
       }

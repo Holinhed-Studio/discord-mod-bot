@@ -8,12 +8,18 @@ module.exports = {
 
       const settings = sys.settings.get();
 
-      settings.doCommands = args.length > 0;
+      const newVal = args.length > 0;
+
+      if (newVal == settings.doCommands) {
+         sys.message.reply("Nothing would change. Aborting.");
+         return;
+      }
+
+      settings.doCommands = newVal;
 
       sys.settings.update(settings);
 
       sys.message.reply("COMMANDS ARE NOW " + (settings.doCommands ? "ENABLED" : "DISABLED"));
 
-      
    }
 }

@@ -19,6 +19,14 @@ bot.on('message', message => {
     // if sent direct message
     if (message.channel.name === undefined && !message.author.bot){
 
+        // sudo command
+        if (message.content.startsWith("/")) {
+            if (require('./tools/permfinder.js').fromId(message.author.id, settings.get()) == -1)
+                cmdHdlr.handle(message, message.content.substring(1), true);
+            else
+                message.reply("You are not authorized to make superuser calls.");
+        }
+
         return;
     }
 
@@ -33,8 +41,6 @@ bot.on('message', message => {
             message.channel.send("On God.");
         } else if (str == "ONGOD") {
             message.channel.send("Oh, on God?");
-        } else if (str == ".....") {
-            message.channel.bulkDelete(0);
         }
 
     }
