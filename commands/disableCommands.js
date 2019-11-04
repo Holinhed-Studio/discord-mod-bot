@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = {
+   name: "disableCommands",
    desc: "Disables Bot Commands. Have to be re-enabled by a superuser.",
    permissions: 20,
    usuage: "",

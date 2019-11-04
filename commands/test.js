@@ -5,7 +5,7 @@ function testFunction(sys, args) {
 }
 
 const test = {
-
+   name: "test",
    desc: 'A command designed to test the command handler.',
    permissions: 0,
    usuage: '',

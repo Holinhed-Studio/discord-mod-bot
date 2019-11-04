@@ -2,13 +2,20 @@
 
 const findPermLevel= require('./tools/permfinder.js');
 
-const commandMap = {
+const commandMapManual = {
    "test": require('./commands/test.js'),
    "toggleOnGod": require('./commands/toggleOnGod.js'),
    "setPrefix": require('./commands/setPrefix.js'),
    "clearChannel": require('./commands/bulkDelete.js'),
    "disableCommands": require('./commands/disableCommands.js'),
 }
+
+let commandMap;
+
+require('./commandRegistar.js')
+.then(value => {
+   commandMap = value;
+});
 
 /*
 Calls command functions by
@@ -65,8 +72,9 @@ class commandHandler {
                const usuage = c.usuage || "";
                const desc = c.desc || "No Description Provided.";
                const perms = c.permissions || "No Permissions Required.";
+               const crtr = c.author ? "\n\n**Author**: " + c.author : "";
 
-               message.channel.send(`>>> __${val}__\n\n**Usuage**: ${this.settingsref.get().prefix}${val} ${usuage}\n\n**Description**: ${desc}\n\n**Permissions**: ${perms}`);
+               message.channel.send(`>>> __${val}__\n\n**Usuage**: ${this.settingsref.get().prefix}${val} ${usuage}\n\n**Description**: ${desc}\n\n**Permissions**: ${perms}${crtr}`);
             } catch (e) {
                message.channel.send("Command \"" + val + "\" does not exist.");
             }

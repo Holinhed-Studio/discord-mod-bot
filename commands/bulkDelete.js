@@ -5,6 +5,7 @@ function commandPayload(sys, args) {
 }
 
 const bulkDelete = {
+   name: "clearChannel",
    desc: "Clears last 100 messages in channel it's executed in.",
    permissions: 10,
    payload: commandPayload,

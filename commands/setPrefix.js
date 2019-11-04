@@ -23,6 +23,7 @@ function commandPayload(sys, args) {
 }
 
 const setPrefix = {
+   name: "setPrefix",
    desc: "Changes the prefix for holinbot commands.",
    permissions: 10,
    usuage: "<prefix>",

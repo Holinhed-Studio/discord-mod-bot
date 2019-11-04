@@ -36,6 +36,7 @@ function commandPayload(sys, args) {
 }
 
 const toggleOnGod = {
+   name: "toggleOnGod",
    desc: "Toggles responses to ongod related messages.",
    permissions: 10,
    usuage: "<true/false>",
