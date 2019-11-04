@@ -8,7 +8,7 @@ const settingsManager = require('./settingsManager.js');
 const bot = new Discord.Client();
 
 // gets token and bot settings from settings.json file
-let settings = new settingsManager();
+const settings = new settingsManager();
 
 const TOKEN = settings.get().LOGINTOKEN;
 

@@ -11,7 +11,7 @@ function commandPayload(sys, args) {
       }
 
       settings.doOnGod = true;
-      sys.message.channel.send("OnGod in now turned on :D");
+      sys.message.channel.send("OnGod is now turned on :D");
 
    } else if (args[0] == 'false') {
 
