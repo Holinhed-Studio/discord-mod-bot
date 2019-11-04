@@ -2,14 +2,6 @@
 
 const findPermLevel= require('./tools/permfinder.js');
 
-const commandMapManual = {
-   "test": require('./commands/test.js'),
-   "toggleOnGod": require('./commands/toggleOnGod.js'),
-   "setPrefix": require('./commands/setPrefix.js'),
-   "clearChannel": require('./commands/bulkDelete.js'),
-   "disableCommands": require('./commands/disableCommands.js'),
-}
-
 let commandMap;
 
 require('./commandRegistar.js')
@@ -44,43 +36,21 @@ class commandHandler {
       commandStream.shift()
 
       if (command == 'help') {
+         commandMap["system_help"].payload({bot: this.botref, settings: this.settingsref, message}, commandMap, commandStream);
+         return;
+      }
 
-         if (commandStream.length == 0) {
-            message.channel.send("Here you go: http://fantasy.works/");
-            return;
-         }
+      if (command == 'list') {
+         commandMap["system_list"].payload({bot: this.botref, settings: this.settingsref, message}, commandMap, commandStream);
+         return;
+      }
 
-         const commandQueue = [];
-
-         commandStream.forEach(val => {
-
-            if (commandQueue.includes(val)) return;
-
-            commandQueue.push(val);
-
-            if (val == 'help') {
-               message.channel.send(">>> __help__\n\n**Usuage**: !help <command...>\n\n" + 
-               "**Description**: Gets documentation about a command.\n\n" + 
-               "**Permissions**: No Permissions Required.");
-               return;
-            }
-
-            try {
-
-               const c = commandMap[val];
-
-               const usuage = c.usuage || "";
-               const desc = c.desc || "No Description Provided.";
-               const perms = c.permissions || "No Permissions Required.";
-               const crtr = c.author ? "\n\n**Author**: " + c.author : "";
-
-               message.channel.send(`>>> __${val}__\n\n**Usuage**: ${this.settingsref.get().prefix}${val} ${usuage}\n\n**Description**: ${desc}\n\n**Permissions**: ${perms}${crtr}`);
-            } catch (e) {
-               message.channel.send("Command \"" + val + "\" does not exist.");
-            }
-
+      if (command == 'reload') {
+         require('./commandRegistar.js')
+         .then(value => {
+            commandMap = value;
+            message.channel.send("Reload Complete.");
          });
-
          return;
       }
 
