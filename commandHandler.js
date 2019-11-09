@@ -33,19 +33,21 @@ class commandHandler {
 
       const command = commandStream[0].trim();
 
-      commandStream.shift()
+      commandStream.shift();
 
-      if (command == 'help') {
+      const permValue = findPermLevel.fromMessage(message, this.settingsref.get());
+
+      if (command == 'help' && (permValue >= commandMap["system_help"].permissions || permValue == -1)) {
          commandMap["system_help"].payload({bot: this.botref, settings: this.settingsref, message}, commandMap, commandStream);
-         return;
+         return 
       }
 
-      if (command == 'list') {
+      if (command == 'list' && (permValue >= commandMap["system_list"].permissions || permValue == -1)) {
          commandMap["system_list"].payload({bot: this.botref, settings: this.settingsref, message}, commandMap, commandStream);
          return;
       }
 
-      if (command == 'reload') {
+      if (command == 'reload' && (permValue >= commandMap["system_reload"].permissions || permValue == -1)) {
          require('./commandRegistar.js')
          .then(value => {
             commandMap = value;
@@ -53,8 +55,6 @@ class commandHandler {
          });
          return;
       }
-
-     const permValue = findPermLevel.fromMessage(message, this.settingsref.get());
 
       try {
          if (permValue < commandMap[command].permissions && permValue != -1) {

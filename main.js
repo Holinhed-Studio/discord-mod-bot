@@ -14,7 +14,7 @@ const TOKEN = settings.get().LOGINTOKEN;
 
 const cmdHdlr = new commandHandler(bot, settings);
 
-bot.on('message', message => {
+bot.on('message', async message => {
     
     // if sent direct message
     if (message.channel.name === undefined && !message.author.bot){
