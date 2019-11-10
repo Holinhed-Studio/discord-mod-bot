@@ -12,7 +12,7 @@ const settings = new settingsManager();
 
 const TOKEN = settings.get().LOGINTOKEN;
 
-const cmdHdlr = new commandHandler(bot, settings);
+const cmdHdlr = new commandHandler(bot, settings, Discord);
 
 bot.on('message', async message => {
     

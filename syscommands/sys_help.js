@@ -3,8 +3,6 @@
 function findPermName(settings,num) {
 
    const permLevels = settings.permlevels;
-   console.log(settings)
-   console.log(permLevels)
 
    for (let val in permLevels) {
       if (permLevels[val] == num) return val; 
@@ -16,15 +14,20 @@ function findPermName(settings,num) {
 function commandPayload(sys, cmdmap, args) {
    
    if (args.length == 0) {
-      sys.message.channel.send("Here you go: http://fantasy.works/");
+      sys.message.reply("Here you go: http://fantasy.works/");
       return;
    }
 
    const commandQueue = [];
+   let iter = 0;
 
    args.forEach(val => {
 
       if (commandQueue.includes(val)) return;
+      
+      if (iter == 5) return;
+      
+      iter++;
 
       commandQueue.push(val);
 
@@ -34,13 +37,10 @@ function commandPayload(sys, cmdmap, args) {
          val = "system_" + val;
       }
 
-      console.log("Getting help for " + val);
-
+      //console.log("Getting help for " + val);
 
       try {
-
          const c = cmdmap[val];
-
          const usuage = c.usuage || "";
          const desc = c.desc || "No Description Provided.";
 
@@ -59,9 +59,24 @@ function commandPayload(sys, cmdmap, args) {
             perms = "No Permissions Required.";
          }
 
-         const crtr = c.author ? "\n\n**Author**: " + c.author : "";
+         //const crtr = c.author ? "\n\n**Author**: " + c.author : "";
 
-         sys.message.channel.send(`>>> __${val}__\n\n**Usuage**: ${sys.settings.get().prefix}${val} ${usuage}\n\n**Description**: ${desc}\n\n**Permissions**: ${perms}${crtr}`);
+         //sys.message.channel.send(`>>> __${val}__\n\n**Usuage**: ${sys.settings.get().prefix}${val} ${usuage}\n\n**Description**: ${desc}\n\n**Permissions**: ${perms}${crtr}`);
+      
+         const richembed = new sys.discord.RichEmbed()
+         .setColor('#0xff3136')
+         .setTitle(val)
+         .setDescription(desc)
+         .addField("Usuage", `${sys.settings.get().prefix}${val} ${usuage}`, false)
+         .addField("Permissions", `${perms}`, false)
+         .setTimestamp()
+
+         if (c.author) {
+            richembed.addField("Author", c.author, false)
+         }
+
+         sys.message.channel.send(richembed);
+
       } catch (e) {
          sys.message.channel.send("Command \"" + ogVal + "\" does not exist.");
       }

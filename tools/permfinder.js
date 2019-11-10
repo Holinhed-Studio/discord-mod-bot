@@ -18,11 +18,24 @@ function fromMessage(message, settings) {
    return permLevel;
 }
 
-function fromId(usrId, settings) {
+function fromId(usrId, settings, mess) {
 
    if (settings.admins.includes(usrId)) return -1;
 
-   return 0;
+   const permLevels = settings.permlevels;
+
+   const usr = mess.member.guild.members.find(u => u.id == usrId);
+
+   let permLevel = 0;
+
+   for (val in permLevels) {
+      if (usr.roles.find(r => r.name === val)) {
+         permLevel = permLevels[val];
+         break;
+      }
+   }
+
+   return permLevel;
 }
 
 module.exports = { fromMessage, fromId };

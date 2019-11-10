@@ -17,9 +17,11 @@ arg1 = array of args for command.
 
 class commandHandler {
 
-   constructor(botref, settingsref) {
+   constructor(botref, settingsref, discordref) {
       this.botref = botref;
       this.settingsref = settingsref;
+      this.discordref = discordref;
+      this.perr = null;
    }
 
    handle(message, cmdstr, sudo) {
@@ -37,13 +39,25 @@ class commandHandler {
 
       const permValue = findPermLevel.fromMessage(message, this.settingsref.get());
 
-      if (command == 'help' && (permValue >= commandMap["system_help"].permissions || permValue == -1)) {
-         commandMap["system_help"].payload({bot: this.botref, settings: this.settingsref, message}, commandMap, commandStream);
-         return 
+      if (command == 'help') {
+         if (permValue >= commandMap["system_help"].permissions || permValue == -1)
+            commandMap["system_help"].payload({bot: this.botref, settings: this.settingsref, message, discord: this.discordref}, commandMap, commandStream);
+         return; 
       }
 
-      if (command == 'list' && (permValue >= commandMap["system_list"].permissions || permValue == -1)) {
-         commandMap["system_list"].payload({bot: this.botref, settings: this.settingsref, message}, commandMap, commandStream);
+      if (command == 'list') {
+         if (permValue >= commandMap["system_list"].permissions || permValue == -1)
+            commandMap["system_list"].payload({bot: this.botref, settings: this.settingsref, message, discord: this.discordref}, commandMap, commandStream);
+         return;
+      }
+
+      if (command == 'perr') {
+         if (permValue >= commandMap["system_perr"].permissions || permValue == -1)
+            if (this.perr == null) {
+               message.channel.send("There are no reported errors yet.");
+            } else {
+               message.channel.send("```[" + this.perr.toString() + "]\n" + this.perr.stack + "```");
+            }
          return;
       }
 
@@ -62,7 +76,7 @@ class commandHandler {
             return;
          }
 
-         const result = commandMap[command].payload({bot: this.botref, settings: this.settingsref, message}, commandStream);
+         const result = commandMap[command].payload({bot: this.botref, settings: this.settingsref, message, discord: this.discordref}, commandStream);
 
          if (result == 1) {
             message.channel.send("There was a problem running that command. Check logs.");
@@ -72,6 +86,7 @@ class commandHandler {
 
       } catch (e) {
          console.error(e);
+         this.perr = e;
          message.channel.send("Command \"" + command + "\" not found.");
       }
 
