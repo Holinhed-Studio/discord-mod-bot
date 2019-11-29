@@ -12,7 +12,11 @@ const settings = new settingsManager();
 
 const TOKEN = settings.get().LOGINTOKEN;
 
-const cmdHdlr = new commandHandler(bot, settings, Discord);
+const plugins = {
+    onGod: require("./plugins/onGod.js"),
+};
+
+const cmdHdlr = new commandHandler(bot, settings, Discord, plugins);
 
 bot.on('message', async message => {
     
@@ -33,14 +37,14 @@ bot.on('message', async message => {
     // otherwise it's in a channel
     if (message.content[0] == settings.get().prefix && !message.author.bot) {  //command
         cmdHdlr.handle(message, message.content.substring(1));
-    } else if (settings.get().doOnGod && message.author.id != "640300066153824300") {   //ongod
-        let str = message.content;
-        str = str.toUpperCase().replace(/[^a-zA-Z1-9]/g, "").trim();
+    } else if (message.author.id != "640300066153824300") {   //plugin payloads
 
-        if (str == "OHONGOD") {
-            message.channel.send("On God.");
-        } else if (str == "ONGOD") {
-            message.channel.send("Oh, on God?");
+        for (let k in plugins) {
+            //console.log("shit")
+            if (plugins[k].payload) {
+               // console.log("fuck you")
+                plugins[k].payload({bot, discord: Discord, settings}, message);
+            }
         }
 
     }
@@ -56,6 +60,12 @@ bot.on('ready', function(){
             url: "https://holinhed.com/discordbot"
         }
     });
+    // initialize plugins
+    for (let k in plugins) {
+        if (plugins[k].init) {
+            plugins[k].init({bot, discord: Discord, settings});
+        }
+    }
     console.log('BOT ACTIVE!');
 });
 

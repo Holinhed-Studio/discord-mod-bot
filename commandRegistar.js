@@ -7,7 +7,7 @@ const fs = require('fs');
 const readdir = util.promisify(fs.readdir);
 
 const dirPath = path.join(__dirname, "commands");
-const dirPath2 = path.join(__dirname, "syscommands");
+const syscmds = path.join(__dirname, "syscommands");
 
 async function loadCommands() {
 
@@ -17,7 +17,7 @@ async function loadCommands() {
 
    try {
       files = await readdir(dirPath);
-      const sfiles = await readdir(dirPath2);
+      const sfiles = await readdir(syscmds);
       files = [...files, ...sfiles];
    } catch (err) {
       console.log(err);
@@ -28,7 +28,7 @@ async function loadCommands() {
       let command;
       
       if (file.startsWith("sys_"))
-         command = require(dirPath2 + path.sep + file);
+         command = require(syscmds + path.sep + file);
       else
          command = require(dirPath + path.sep + file);
 

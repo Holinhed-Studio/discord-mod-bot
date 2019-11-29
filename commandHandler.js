@@ -17,11 +17,12 @@ arg1 = array of args for command.
 
 class commandHandler {
 
-   constructor(botref, settingsref, discordref) {
+   constructor(botref, settingsref, discordref, pluginsref) {
       this.botref = botref;
       this.settingsref = settingsref;
       this.discordref = discordref;
       this.perr = null;
+      this.pluginsref = pluginsref;
    }
 
    handle(message, cmdstr, sudo) {

@@ -12,12 +12,7 @@ function commandPayload(sys, cmdmap, args) {
 
    const numCommands = Object.keys(cmdmap).length;
 
-   let pages = numCommands / CMDS_PER_PAGE;
-
-   if (pages < 1) pages = 1
-   else {
-      pages = Math.ceil(pages);
-   }
+   const pages = Math.ceil(numCommands / CMDS_PER_PAGE);
 
    if (page < 0 || page > pages - 1) {
       sys.message.channel.send("Invalid page. Must be between 1 and " + pages);
